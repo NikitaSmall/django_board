@@ -4,6 +4,9 @@
       <a class="navbar-brand" href="{% url 'index' %}">Django dashboard</a>
     </div>
 
+    {% load helpers %}
+    {% category_nav %}
+
     <ul class="nav navbar-nav navbar-right col-md-2">
       <li>
         {% if user.is_authenticated %}
