@@ -27,3 +27,14 @@ class Subcategory(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Topic(models.Model):
+    subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+
+    pub_date = models.DateTimeField('publish date', auto_now_add=True)
+
+    def __str__(self):
+        return self.name
