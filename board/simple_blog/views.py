@@ -3,6 +3,11 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views import generic
 
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+
+from django.contrib import messages
+
 from .models import Category, Subcategory, Topic, Message
 
 
@@ -39,11 +44,53 @@ def create_message(request, topic_id):
     return HttpResponseRedirect(reverse('topic', args=(topic_id,)))
 
 
-class SubcategoryView(generic.DetailView):
-    model = Subcategory
-    template_name = 'dashboard/subcategory.html'
+def subcategory(request, subcategory_id):
+    subcategory = get_object_or_404(Subcategory, pk=subcategory_id)
+    if subcategory.category.protected and (not request.user.is_authenticated()):
+        messages.error(request, 'You need to be logged in to have access to private topic.')
+        return HttpResponseRedirect(reverse('index', args=()))
+
+    return render(request, 'dashboard/subcategory.html', {'subcategory': subcategory})
 
 
-class TopicView(generic.DetailView):
-    model = Topic
-    template_name = 'dashboard/topic.html'
+def topic(request, topic_id):
+    topic = get_object_or_404(Topic, pk=topic_id)
+    if topic.subcategory.category.protected and (not request.user.is_authenticated()):
+        messages.error(request, 'You need to be logged in to have access to private topic.')
+        return HttpResponseRedirect(reverse('index', args=()))
+        
+    return render(request, 'dashboard/topic.html', {'topic': topic})
+
+
+def loginpage_view(request):
+    return render(request, 'dashboard/login.html')
+
+
+def signup_view(request):
+    username = request.POST['username']
+    email = request.POST['email']
+    password = request.POST['password']
+    user = User.objects.create_user(username, email, password)
+    if user is not None:
+        if user.is_active:
+            login(request, user)
+            return HttpResponseRedirect(reverse('index', args=()))
+
+    return render(request, 'dashboard/login.html', {'error_message': 'Error during signup'})
+
+
+def login_view(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        if user.is_active:
+            login(request, user)
+            return HttpResponseRedirect(reverse('index', args=()))
+
+    return render(request, 'dashboard/login.html', {'error_message': 'Error during login'})
+
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('index', args=()))
