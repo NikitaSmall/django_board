@@ -29,7 +29,13 @@
                 <h3 class="panel-title">Recent posts</h3>
               </div>
               <div class="panel-body">
-                Panel content
+                <ul class="list-group">
+                  {% for message in last_updates %}
+                    <a href="{% url 'topic' message.topic_id %}" type="button" class="list-group-item">
+                      <strong>{{ message.topic.name }}</strong>: {{ message.text|truncatechars:30 }}
+                    </a>
+                  {% endfor %}
+                </ul>
               </div>
             </div>
           </div>

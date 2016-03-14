@@ -33,18 +33,21 @@
           <div class="col-md-12">
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h3 class="panel-title">Create new topic</h3>
+                <h3 class="panel-title">Create new message</h3>
               </div>
               <div class="panel-body">
-                <form class="form-inline" method="post" action="{% url 'new_topic' subcategory.id %}">
+                <form method="post" action="{% url 'new_message' topic.id %}">
                   {% csrf_token %}
                   <div class="form-group">
-                    <input type="text" class="form-control" name="name" placeholder="Topic title" required="true">
+                    <input type="text" class="form-control" name="author" placeholder="Author">
                   </div>
                   <div class="form-group">
-                    <textarea type="text" class="form-control" name="description" rows="1" placeholder="Topic description" required="true"></textarea>
+                    <input type="email" class="form-control" name="email" placeholder="Author's email">
                   </div>
-                  <button type="submit" class="btn btn-default">Create topic</button>
+                  <div class="form-group">
+                    <textarea type="text" class="form-control" name="text" rows="1" placeholder="Message text" required="true"></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-default">Create message</button>
                 </form>
               </div>
             </div>
@@ -53,14 +56,21 @@
 
         <div class="row">
 
-          {% for topic in subcategory.topic_set.all %}
-            <div class="col-md-3">
+          {% for message in topic.message_set.all %}
+            <div class="col-md-12">
               <div class="panel panel-default">
                 <div class="panel-heading">
-                  <a href="{% url 'topic' topic.id %}"><h3 class="panel-title">{{ topic.name }}</h3></a>
+                  <h3 class="panel-title">
+                    <strong>{{forloop.counter}}</strong>:
+                    {% if message.author %}
+                      {{ message.author }}
+                    {% else %}
+                      Anonymous
+                    {% endif %}
+                  </h3>
                 </div>
                 <div class="panel-body">
-                  {{ topic.description }}
+                  {{ message.text }}
                 </div>
               </div>
             </div>

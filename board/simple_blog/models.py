@@ -38,3 +38,16 @@ class Topic(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Message(models.Model):
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    author = models.CharField(max_length=255)
+    email = models.CharField(max_length=255)
+
+    text = models.TextField()
+
+    pub_date = models.DateTimeField('publish date', auto_now_add=True)
+
+    def __str__(self):
+        return self.text
