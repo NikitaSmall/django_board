@@ -1,5 +1,5 @@
 */**/*.pyc
 
-*/**/*.sqllite3
+*/**/*.sqlite3
 
 board/media/
