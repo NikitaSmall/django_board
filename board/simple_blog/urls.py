@@ -6,6 +6,7 @@ urlpatterns = [
 
     url(r'^forum/(?P<subcategory_id>[0-9]+)/$', views.subcategory, name='forum'),
     url(r'^topic/(?P<topic_id>[0-9]+)/$', views.topic, name='topic'),
+    url(r'^topic/(?P<topic_id>[0-9]+)/check$', views.topic_check, name='topic_check'),
 
     url(r'^forum/(?P<subcategory_id>[0-9]+)/topics/$', views.create_topic, name='new_topic'),
     url(r'^topic/(?P<topic_id>[0-9]+)/messages/$', views.create_message, name='new_message'),

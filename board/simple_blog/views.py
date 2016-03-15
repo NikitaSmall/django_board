@@ -3,6 +3,8 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views import generic
 
+from django.http import JsonResponse
+
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
@@ -22,11 +24,13 @@ def index(request):
 
 
 def create_topic(request, subcategory_id):
+    # checks is the Files dict is empty
+    docfile = request.FILES['docfile'] if bool(request.FILES) else None
     topic = Topic(
         name=request.POST['name'],
         description=request.POST['description'],
         subcategory_id=subcategory_id,
-        docfile=request.FILES['docfile'],
+        docfile=docfile,
     )
     topic.save()
 
@@ -34,12 +38,14 @@ def create_topic(request, subcategory_id):
 
 
 def create_message(request, topic_id):
+    # checks is the Files dict is empty
+    docfile = request.FILES['docfile'] if bool(request.FILES) else None
     message = Message(
         author=request.POST['author'],
         email=request.POST['email'],
         topic_id=topic_id,
         text=request.POST['text'],
-        docfile=request.FILES['docfile'],
+        docfile=docfile,
     )
     message.save()
 
@@ -62,6 +68,10 @@ def topic(request, topic_id):
         return HttpResponseRedirect(reverse('index', args=()))
 
     return render(request, 'dashboard/topic.html', {'topic': topic})
+
+
+def topic_check(request, topic_id):
+    return JsonResponse(map(lambda el: el.as_dict(), Message.objects.filter(topic_id=topic_id)), safe=False)
 
 
 def loginpage_view(request):

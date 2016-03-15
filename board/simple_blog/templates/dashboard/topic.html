@@ -10,7 +10,7 @@
       <div class="col-md-offset-1 col-md-10">
         {% include 'includes/messages.html' %}
 
-        <div class="row">
+        <div class="row" id="topic" data-id="{{ topic.id }}">
 
             <div class="col-md-12">
               <div class="panel panel-default">
@@ -56,10 +56,10 @@
           </div>
         </div>
 
-        <div class="row">
+        <div class="row" id="messages">
 
           {% for message in topic.message_set.all %}
-            <div class="col-md-12">
+            <div class="col-md-12 message">
               <div class="panel panel-default">
                 <div class="panel-heading">
                   <h3 class="panel-title">
@@ -84,5 +84,6 @@
     </div>
 
     {% include 'includes/scripts.html' %}
+    <script src="/static/js/polling.js"></script>
   </body>
 </html>

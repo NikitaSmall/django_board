@@ -60,3 +60,9 @@ class Message(models.Model):
 
     def __str__(self):
         return self.text
+
+    def as_dict(self):
+        if self.docfile:
+            return {'author': self.author, 'text': self.text, 'docfile': self.docfile.url}
+        else:
+            return {'author': self.author, 'text': self.text}
