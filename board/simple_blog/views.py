@@ -26,6 +26,7 @@ def create_topic(request, subcategory_id):
         name=request.POST['name'],
         description=request.POST['description'],
         subcategory_id=subcategory_id,
+        docfile=request.FILES['docfile'],
     )
     topic.save()
 
@@ -38,6 +39,7 @@ def create_message(request, topic_id):
         email=request.POST['email'],
         topic_id=topic_id,
         text=request.POST['text'],
+        docfile=request.FILES['docfile'],
     )
     message.save()
 
@@ -58,7 +60,7 @@ def topic(request, topic_id):
     if topic.subcategory.category.protected and (not request.user.is_authenticated()):
         messages.error(request, 'You need to be logged in to have access to private topic.')
         return HttpResponseRedirect(reverse('index', args=()))
-        
+
     return render(request, 'dashboard/topic.html', {'topic': topic})
 
 
